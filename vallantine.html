@@ -19,42 +19,37 @@
 
         #container {
             background: white;
-            padding: 2.5rem;
+            padding: 3rem;
             border-radius: 30px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            max-width: 400px;
+            max-width: 450px;
             width: 90%;
             position: relative;
         }
 
-        .valentine-img {
-            width: 220px;
-            height: auto;
-            border-radius: 15px;
-            margin-bottom: 1rem;
-        }
-
         h1 {
             color: #d63384;
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
+            font-size: 2.2rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.2;
         }
 
         .buttons-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 30px;
-            height: 60px;
+            gap: 40px;
+            height: 80px;
         }
 
         button {
-            padding: 12px 30px;
-            font-size: 1.2rem;
+            padding: 15px 35px;
+            font-size: 1.3rem;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
+            transition: background-color 0.3s;
         }
 
         #yesBtn {
@@ -70,29 +65,29 @@
             z-index: 999;
         }
 
-        /* Success Section Styling */
+        /* Success Section */
         #success-section {
             display: none;
-            animation: popIn 0.5s ease-out;
+            animation: popIn 0.6s cubic-bezier(0.17, 0.67, 0.83, 0.67);
         }
 
         .success-message {
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: bold;
             color: #ff4d6d;
-            margin-top: 10px;
         }
 
         @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
+            0% { transform: scale(0); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
 
+        /* Cracker/Confetti Style */
         .confetti {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
             pointer-events: none;
         }
     </style>
@@ -101,7 +96,6 @@
 
     <div id="container">
         <div id="question-section">
-            <img src="https://github.com/Itsharmaji/New-project/blob/main/images.jpg" class="valentine-img">
             <h1>Will you be my vallantine</h1>
             <div class="buttons-wrapper">
                 <button id="yesBtn">Yes</button>
@@ -110,7 +104,6 @@
         </div>
 
         <div id="success-section">
-            <img src="https://github.com/Itsharmaji/New-project/blob/main/images2.jpg" alt="Happy Cat" class="valentine-img">
             <div class="success-message">YAY! 🎆</div>
         </div>
     </div>
@@ -121,27 +114,39 @@
         const questionSection = document.getElementById('question-section');
         const successSection = document.getElementById('success-section');
 
-        // The "fleeing" No button logic
+        // Function to make the "No" button flee
         const moveButton = () => {
+            // Switch to fixed positioning so it can fly anywhere on the screen
             noBtn.style.position = 'fixed';
-            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
-            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
-            const newX = Math.max(10, Math.random() * maxX);
-            const newY = Math.max(10, Math.random() * maxY);
+            
+            // Calculate random coordinates
+            const padding = 20;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+            const newX = Math.max(padding, Math.random() * maxX);
+            const newY = Math.max(padding, Math.random() * maxY);
+
             noBtn.style.left = `${newX}px`;
             noBtn.style.top = `${newY}px`;
         };
 
+        // Move on mouse hover
         noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
+        
+        // Move on mobile tap (prevents them from ever hitting it)
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
 
-        // The "Yes" click logic
+        // Click on Yes
         yesBtn.addEventListener('click', () => {
             questionSection.style.display = 'none';
             successSection.style.display = 'block';
             
-            // Explosion of crackers
-            for (let i = 0; i < 100; i++) {
+            // Burst the crackers
+            for (let i = 0; i < 150; i++) {
                 createFirework();
             }
         });
@@ -151,20 +156,23 @@
             confetti.className = 'confetti';
             document.body.appendChild(confetti);
 
-            const colors = ['#ff4d6d', '#ffbc42', '#3a86ff', '#8338ec', '#fb5607', '#ff006e'];
+            // Party colors
+            const colors = ['#ff4d6d', '#ffbc42', '#3a86ff', '#8338ec', '#fb5607', '#ff006e', '#00f5d4'];
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
             
+            // Start from the middle of the screen
             confetti.style.left = '50%';
             confetti.style.top = '50%';
 
-            const destX = (Math.random() - 0.5) * window.innerWidth;
-            const destY = (Math.random() - 0.5) * window.innerHeight;
+            // Random flight direction
+            const destX = (Math.random() - 0.5) * window.innerWidth * 1.5;
+            const destY = (Math.random() - 0.5) * window.innerHeight * 1.5;
 
             const anim = confetti.animate([
                 { transform: 'translate(0, 0) scale(1) rotate(0deg)', opacity: 1 },
-                { transform: `translate(${destX}px, ${destY}px) scale(0) rotate(720deg)`, opacity: 0 }
+                { transform: `translate(${destX}px, ${destY}px) scale(0) rotate(1080deg)`, opacity: 0 }
             ], {
-                duration: 1500,
+                duration: 2000,
                 easing: 'cubic-bezier(0, .9, .57, 1)'
             });
 
@@ -173,6 +181,3 @@
     </script>
 </body>
 </html>
-<!img1= https://tenor.com/search/cat-heart-gifs
-
-img2= https://www.instagram.com/p/Cg-dkKgrjPg/>
